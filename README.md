@@ -14,7 +14,7 @@
 GitMonitor is a Github scanning system to look for leaked sensitive information based on rules. I know that there are a lot of very good other tools for finding sensitive information leaked on Github right now, I myself currently still use some of them. However, I think they still lack some features like:
 
 + A scanning tool based on the rules.
-+ The rules mechanism allows me to write rules in the most flexible way possible. The rules allow me to filter information by brand name, file format and by language. As well as allowing me to skip specific file formats and languages (Searching rules). Then clone the repositories that have matched the rules to local before start looking for the sensitive information that exists there based on regular expressions (Sensitive filter rules). You can do that by defining keywords related to your company brand name, keywords related to your company's projects, email prefixes, or anything else in the rules.
++ The rules mechanism allows me to write rules in the most flexible way possible. The rules allow me to filter information by brand name, file format and by language. As well as allowing me to skip specific file formats and languages (Searching rules). Then clone the repositories that have matched the rules to local before start looking for the sensitive information that exists there based on regular expressions (Sensitive filtering rules). You can do that by defining keywords related to your company brand name, keywords related to your company's projects, email prefixes, or anything else in the rules.
 + The tool can launch on schedule and has a flexible reporting mechanism.
 
 That is why I created this tool - GitMonitor.
@@ -22,7 +22,7 @@ That is why I created this tool - GitMonitor.
 ## Features
 
 + Search the repository based on rules (Searching rules). You can write rules to search for repositories that may be related to your company. The repositories matching the rules will be cloned to local.
-+ Use Regex (Sensitive filter rules) to search for sensitive information that exists in cloned repository, for classification purposes.
++ Use Regex (Sensitive filtering rules) to search for sensitive information that exists in cloned repository, for classification purposes.
 + Report via Slack.
 + Rules and regex are defined separately
 + Users can define rules and regex easily and intuitively.
@@ -100,7 +100,7 @@ Please make sure you have Pyyaml version 5x or higher installed
      - txt
 
 ```
-+ Define the regular expressions in libs/regex.py file (Sensitive filter rules).
++ Define the regular expressions in libs/regex.py file (Sensitive filtering rules).
 
 + Run:
 
