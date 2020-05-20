@@ -17,7 +17,7 @@ GitMonitor is a Github scanning system to look for leaked sensitive information 
 + The rules mechanism allows me to write rules in the most flexible way possible. The rules allow me to filter information by brand name, file format and by language. As well as allowing me to skip specific file formats and languages (Searching rules). Then clone the repositories that have matched the rules to local before start looking for the sensitive information that exists there based on regular expressions (Sensitive filtering rules). You can do that by defining keywords related to your company brand name, keywords related to your company's projects, email prefixes, or anything else in the rules.
 + The tool can launch on schedule and has a flexible reporting mechanism.
 
-That is why I created this tool - GitMonitor.
+That is why I created this tool - GitMonitor. GitMonitor uses two different sets of rules to find what you need. The Searching rules will search for repositories that may be related to your organization or internal projects, or anything else, clone repositories that matched to local. Then, Sensitive filtering rules to check if those repositories exist sensitive information. Finally the tool will report via Slack. You can use this tool with Cronjob to create a monitoring system to track sensitive information related to your organization that leaked on Github and receive results via Slack.
 
 ## Features
 
