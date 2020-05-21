@@ -100,6 +100,7 @@ Please make sure you have Pyyaml version 5x or higher installed
      - txt
 
 ```
+
 + Define the regular expressions in libs/regex.py file (Sensitive filtering rules).
 
 + Run:
@@ -107,8 +108,8 @@ Please make sure you have Pyyaml version 5x or higher installed
 ```bash
 Python3 gitmonitor.py
 ```
-+ You can schedule automatic running for the tool by using Cronjob.
 
++ You can schedule automatic running for the tool by using Cronjob.
 
 ## My Team
 
