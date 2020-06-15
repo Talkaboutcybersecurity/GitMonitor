@@ -1,4 +1,4 @@
-# GitMonitor is a Github scanning system to look for leaked sensitive information based on rules
+# GitMonitor
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 <p align="center">
@@ -7,109 +7,119 @@
 
 <center>
   <h1 style="text-align:center;">GitMonitor</h1>
+  <h3 style="text-align:center;">One way to continuously monitor sensitive information that could be exposed on Github</h3>
 </center>
 
 ## Summary
 
-GitMonitor is a Github scanning system to look for leaked sensitive information based on rules. I know that there are a lot of very good other tools for finding sensitive information leaked on Github right now, I myself currently still use some of them. However, I think they still lack some features like:
+I know that there are many other tools available for finding sensitive information currently leaked on Github, I myself still use some of them. However, I think they still lack some features like:
 
-+ A scanning tool based on the rules.
-+ The rules mechanism allows me to write rules in the most flexible way possible. The rules allow me to filter information by brand name, file format and by language. As well as allowing me to skip specific file formats and languages (Searching rules). Then clone the repositories that have matched the rules to local before start looking for the sensitive information that exists there based on regular expressions (Sensitive filtering rules). You can do that by defining keywords related to your company brand name, keywords related to your company's projects, email prefixes, or anything else in the rules.
-+ The tool can launch on schedule and has a flexible reporting mechanism.
++ Other tools are more focused on finding sensitive information that exists in a repository that has passed Git address into the tool. There are only a handful of similar tools at the time when I developed GitMonitor focused on `finding` repositories you need to care about first, find all relevant repositories, then `checking` to see if sensitive information exists among they are not.
 
-That is why I created this tool - GitMonitor. GitMonitor uses two different sets of rules to find what you need. The Searching rules will search for repositories that may be related to your organization or internal projects, or anything else, clone repositories that matched to local. Then, Sensitive filtering rules to check if those repositories exist sensitive information. Finally the tool will report via Slack. You can use this tool with Cronjob to create a monitoring system to track sensitive information related to your organization that leaked on Github and receive results via Slack.
++ In addition to rules for `checking sensitive information`, the tool also needs rules to `search for repositories of interest`. The repositories to be considered may be those that contain keywords related to the company or the project.
+
++ If you are a bug bounty hunter you will only be interested in several targets at a time. However, if you are a security engineer for a company, you will need to know when a repository related to your company or project appears and it may contain sensitive information. Such repositories can appear anywhere on Github, with any name and posted by any account. You should also receive an alert as soon as such a repository appears (continuously monitoring).
+
++ The tool has a flexible reporting mechanism.
+
+That is why I created this tool - GitMonitor. GitMonitor uses two different sets of rules to find what you need. `The Searching ruleset` will search for repositories that may be related to your organization or internal projects, or anything else, clone repositories that matched to local. Then, `Sensitive filtering ruleset` to check if those repositories exist sensitive information. Finally the tool will report via Slack. You can use this tool with Cronjob to create a continuously monitoring system to track sensitive information related to your organization that leaked on Github and receive results via Slack.
+
+![GitMonitor in the action](images/action1.gif)
+
+![GitMonitor in the action](images/action2.gif)
 
 ## Features
 
-+ Search the repository based on rules (Searching rules). You can write rules to search for repositories that may be related to your company. The repositories matching the rules will be cloned to local.
-+ Use Regex (Sensitive filtering rules) to search for sensitive information that exists in cloned repository, for classification purposes.
++ Use two different sets of rules, a `searching rule set` (yaml) to search for the repository of interest, and a `set of filter rules` (regex) to check if those containers of interest contain sensitive information. Searching Rules (yaml) and Filtering Rules (regex) are defined separately. Users can define yaml rules and regex easily and intuitively.
+
++ `Searching rule set`: You can create many different rules by using different yaml files. Rules allow you to flexibly define how you want to search for repositories, you can use keywords, or keywords associated with the language, filename and extension or You can also define to exclude repositories from searching based on language, filename or extension. Keywords will be searched through the `names of the repositories`, `the codes of the repositories` and also `the commits`.
+
++ `Filtering rule set`: You can add or modify regexs easily to find sensitive information that may exist in repositories.
+
++ The first repository that have matched the searching ruleset will be clone to local. And then, filtering ruleset will check if this repository exist sensitive information. After finishing checking sensitive information, Gitmonitor will record the results and automatically delete this repository on local to save space before continuing to repeat this process until all relevant repositories have been found and checked.
+
 + Report via Slack.
-+ Rules and regex are defined separately
-+ Users can define rules and regex easily and intuitively.
+
++ This tool can be scheduled by Cronjob for continuous monitoring.
 
 ![Working Diagram](images/diagram.png)
 
 ## Requirements
 
-+ Python3, Python3-pip
-
-Tested on Ubuntu 18.04.
++ Python3
++ Python3-pip.
++ Tested on Ubuntu 18.04 and MacOS. We believe that Gitmonitor can work well on other systems as well
 
 ## Setup
 
-+ Install requirements:
+### 1. Install requirements
 
 ```bash
-Python3 -m pip install -r requirements.txt
+> python3 -m pip install -r requirements.txt
 ```
 
-Please make sure you have Pyyaml version 5x or higher installed
+Please make sure you have Pyyaml version 5x or higher installed (`pip3 install --ignore-installed PyYAML`)
 
-+ Fill in the required information in the configuration file (config.ini):
+### 2. Make sure you have configured all the necessary information in the configuration file (config.ini)
 
-```ini
-[git]
- user = <username_git>
- pass = <password_git>
- url_code = https://api.github.com/search/code?q={}+in:file&sort=indexed&order=desc
- url_repos = https://api.github.com/search/repositories?q={}+size:>0+is:public&sort=indexed&order=desc
- url_commit = https://api.github.com/search/commits?q={}+is:public&sort=indexed&order=desc
- rpp = 50
- 
- [slack]
- webhooks = <full_link_webhooks>
- 
- 
- [path]
- rule = <path to rule folder>
- source = <path to folder to clone repository>
- log = <filename of log>
- 
- [msg]
- start = ====================**********====================
- 
-         *Start scanning at {}*
-         _Clone completed successfully:_
- end = ====================**********====================
- 
-       *Scanning Done at {}*
-       _Detected possible repository:_
- all = ====================**********====================
+The following table explains the meaning of each key in the configuration file:
 
-```
+|  Key | Description|
+|:---:|---|
+|user|Github username - Leave blank if you have set up Github credentials via environment variables|
+|pass|Github password - Leave blank if you have set up Github credentials via environment variables|
+|webhooks|Incoming Webhook token to post messages from GitMonitor to Slack|
+|rule|The directory contains the Searching rule set|
+|source|The directory to download the repository|
+|log|The directory will contain the JSON file that records the status after each scan, this JSON file is used to compare results between scans (To identify new repositories)|
+|start|Define banner for start scanning and banner for result of Sensitive Filtering Ruleset scanning - Will show in the results that sent to Slack|
+|end|Define banner for finish scanning and banner for result of Searching Ruleset scanning  - Will show in the results that sent to Slack|
+|all|Define banner for showing all repositories - Will show in the results that sent to Slack|
 
-+ Write the rules (Searching rules). Put your rules in the rules directory:
+### 3. Define Github account credentials. You have 2 ways to do this
 
-```yaml
- id: Project_X_Matching
- key: X
- language:
-   - java
- #filename:
- #  - LICENSE
- #extension:
- #  - py
- #  - md
- ignore:
- #  language:
- #    - php
-   filename:
-     - LICENSE
-   extension:
-     - html
-     - txt
-
-```
-
-+ Define the regular expressions in libs/regex.py file (Sensitive filtering rules).
-
-+ Run:
++ Define credentials information in environment variables:
 
 ```bash
-Python3 gitmonitor.py
+> export GIT_USERNAME=your Github username
+> export GIT_PASSWORD=your Github personal key or password
 ```
 
-+ You can schedule automatic running for the tool by using Cronjob.
++ Or define credentials information in configuration file (Not recommended):
+
+  + Open config.ini file.
+  + Fill in the credentials information to value of user and password keys.
+
+Example configuration file when you define credentials information in environment variables
+
+![Example config file](images/configfile.png)
+
+### 4. Write the rules (Searching rules). Put your rules in the rules directory
+
+You can create many different yaml files like the rule template to define multiple keyword. A rule file will look like the image below:
+
+![Example rule file](images/rule.png)
+
+### 5. Add more regular expressions to libs/regex.py file - Sensitive filtering rules (Optional)
+
+### 6. Run Gitmonitor
+
+```bash
+> python3 gitmonitor.py
+```
+
+### 7. You can schedule automatic running for the tool by using Cronjob.
+
+For example:
+
+![Example cronjob](images/cron.png)
+
+## To Do
+
++ [ ] Feature: Report via email.
++ [ ] Feature: Sent result to Elasticsearch.
++ [ ] Dev: Write setup.py
++ [ ] Dev: Write Dockerfile
 
 ## My Team
 
@@ -133,3 +143,7 @@ In general, we follow the "fork-and-pull" Git workflow.
 5. Submit a Pull request so that we can review your changes
 
 NOTE: Be sure to merge the latest from "upstream" before making a pull request!
+
+## Donate
+
+<style>.bmc-button img{height: 34px !important;width: 35px !important;margin-bottom: 1px !important;box-shadow: none !important;border: none !important;vertical-align: middle !important;}.bmc-button{padding: 7px 15px 7px 10px !important;line-height: 35px !important;height:51px !important;text-decoration: none !important;display:inline-flex !important;color:#ffffff !important;background-color:#FF813F !important;border-radius: 5px !important;border: 1px solid transparent !important;padding: 7px 15px 7px 10px !important;font-size: 20px !important;letter-spacing:0.6px !important;box-shadow: 0px 1px 2px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;margin: 0 auto !important;font-family:'Arial', cursive !important;-webkit-box-sizing: border-box !important;box-sizing: border-box !important;}.bmc-button:hover, .bmc-button:active, .bmc-button:focus {-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;text-decoration: none !important;box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;opacity: 0.85 !important;color:#ffffff !important;}</style><link href="https://fonts.googleapis.com/css?family=Arial" rel="stylesheet"><a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/tabcs"><img src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg" alt="Buy me a coffee"><span style="margin-left:5px;font-size:19px !important;">Buy me a coffee</span></a>

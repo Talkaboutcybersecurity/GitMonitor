@@ -59,12 +59,18 @@ def get_time():
 
 def initialization(config_file):
     conf = get_config(config_file)
-    if not exists_dir(conf['path_source']):
-        os.mkdir(conf['path_source'])
-    if not exists_dir(conf['path_rule']):
-        print("ERROR: Not found rule folder.")
-        exit()
-    conf['path_source'] = conf['path_source'].rstrip("/")
+    if not conf['path_source'] or not conf['path_rule'] or not conf['path_log'] or not conf['slack_webhooks']:
+        print("ERROR: Make sure you have defined all the information in the configuration file - config.ini")
+        exit(1)
+    else:
+        if not exists_dir(conf['path_source']):
+            os.mkdir(conf['path_source'])
+        if not exists_dir(conf['path_log']):
+            os.mkdir(conf['path_log'])
+        if not exists_dir(conf['path_rule']):
+            print("ERROR: Not found rule folder.")
+            exit(1)
+        conf['path_source'] = conf['path_source'].rstrip("/")
     return conf
 
 

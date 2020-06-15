@@ -5,12 +5,12 @@ import json
 def get_message(dic, rule_id):
     msg = ''
     if len(dic) == 0:
-        msg = ">Nothing new"
+        msg = ">There are no new findings"
     for i in dic:
         if "matched" not in dic[i]:
             msg += ">{}\n".format(dic[i]['html_url'])
         else:
-            msg += ">{} - Matched: {}\n".format(dic[i]['html_url'], dic[i]["matched"])
+            msg += ">{} - May contain the following sensitive information: {}\n".format(dic[i]['html_url'], dic[i]["matched"])
     msg = "[Rule ID: {}]\n{}".format(rule_id, msg)
     return msg
 

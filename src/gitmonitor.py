@@ -8,7 +8,7 @@ from libs.rules import build_query
 
 
 conf = initialization(config_file)
-logs = get_json("{}/{}".format(conf['path_source'], conf['path_log']))
+logs = get_json("{}/{}".format(conf['path_log'], "old_result"))
 send_message(conf['msg_start'].format(get_time()), conf)
 for r, d, f in os.walk(conf['path_rule']):
     for file in f:
@@ -28,21 +28,21 @@ for r, d, f in os.walk(conf['path_rule']):
                 pages, rep = get_page_number(query, conf, typ)
                 if pages is None or rep is None:
                     continue
-                handle_page(rep['items'], logs[rule_id], conf, clone, possible[rule_id])
+                print("\nINFO: Working with Searching Rule ...\n")
+                handle_page(rep['items'], logs[rule_id], conf, clone, rule_id)
                 if pages > 2:
                     for i in range(2, pages):
                         repo = search_repository(query, conf, typ, "&per_page={}&page={}".format(conf['git_rpp'], str(i)))
                         if repo is None:
                             continue
                         time.sleep(10)
-                        handle_page(repo['items'], logs[rule_id], conf, clone, possible[rule_id])
+                        print("\nINFO: Working with Searching Rule ...\n")
+                        handle_page(repo['items'], logs[rule_id], conf, clone, rule_id)
                 if typ != "code":
                     break
+        send_message(conf['msg_end'].format(get_time()), conf)
         send_list(clone, conf, rule_id)
-send_message(conf['msg_end'].format(get_time()), conf)
-for rule_id in possible:
-    send_list(possible[rule_id], conf, rule_id)
 send_message(conf['msg_all'], conf)
 for rule_id in logs:
     send_list(logs[rule_id], conf, rule_id)
-write_file("{}/{}".format(conf['path_source'], conf['path_log']), logs)
+write_file("{}/{}".format(conf['path_log'], "old_result"), logs)

@@ -3,6 +3,7 @@ import json
 import math
 import git
 import time
+import os
 from libs.init import list_info
 from libs.utils import write_file
 from libs.slack import send_message
@@ -21,13 +22,23 @@ def handle_error_search(repo, conf):
 
 
 def search_repository(query, conf, typ, uri=""):
+    git_user = os.environ.get('GIT_USERNAME')
+    git_pass = os.environ.get('GIT_PASSWORD')
+    if git_pass is None or git_pass is None:
+        if not conf['git_user'] or not conf['git_pass']:
+            print('ERROR: Make sure you have defined github credential in the ENV or config file - config.ini')
+            exit(1)
+        else:
+            git_user = conf['git_user']
+            git_pass = conf['git_pass']
+
     url = conf['git_url_' + typ].format(query) + uri
     headers = {"Accept": "application/vnd.github.cloak-preview"}
-    r = requests.get(url, auth=(conf['git_user'], conf['git_pass']), headers=headers)
+    r = requests.get(url, auth=(git_user, git_pass), headers=headers)
     while "total_count" not in json.loads(r.text) and "message" in json.loads(r.text):
         if handle_error_search(json.loads(r.text), conf):
             return None
-        r = requests.get(url, auth=(conf['git_user'], conf['git_pass']), headers=headers)
+        r = requests.get(url, auth=(git_user, git_pass), headers=headers)
     return json.loads(r.text)
 
 
@@ -44,7 +55,7 @@ def get_page_number(query, conf, typ):
 
 
 def handle_error_download(conf, e, logs):
-    print("ERROR:" + str(e))
+    print("ERROR: " + str(e))
     if "enough space" in str(e):
         send_message("*ERROR*: Not enough space when cloning repository", conf)
         write_file("{}/{}".format(conf['path_source'], conf['file_log']), logs)
@@ -52,11 +63,21 @@ def handle_error_download(conf, e, logs):
     pass
 
 
-def handle_page(rp_items, logs, conf, cloned, possible):
+def handle_page(rp_items, logs, conf, cloned, rule_id):
+    git_user = os.environ.get('GIT_USERNAME')
+    git_pass = os.environ.get('GIT_PASSWORD')
+    if git_pass is None or git_pass is None:
+        if not conf['git_user'] or not conf['git_pass']:
+            print('ERROR: Make sure you have defined github credential in the ENV or config file - config.ini')
+            exit(1)
+        else:
+            git_user = conf['git_user']
+            git_pass = conf['git_pass']
+
     for rp in rp_items:
         rpi = {}
         if "repository" in rp:
-            r = requests.get(rp['repository']['url'], auth=(conf['git_user'], conf['git_pass']))
+            r = requests.get(rp['repository']['url'], auth=(git_user, git_pass))
             rp = json.loads(r.text)
         for i in list_info:
             rpi[i] = rp[i]
@@ -68,6 +89,6 @@ def handle_page(rp_items, logs, conf, cloned, possible):
                 js = {"html_url": rpi['html_url'], "updated_at": rpi['updated_at'], "state": 'new'}
                 logs[folder_name] = js
                 cloned[folder_name] = {"html_url": rpi['html_url']}
-                handle_directory(logs, conf, possible, folder_name)
+                handle_directory(logs, conf, folder_name, rule_id)
             except Exception as e:
                 handle_error_download(conf, e, logs)
