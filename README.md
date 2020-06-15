@@ -24,9 +24,13 @@ I know that there are many other tools available for finding sensitive informati
 
 That is why I created this tool - GitMonitor. GitMonitor uses two different sets of rules to find what you need. `The Searching ruleset` will search for repositories that may be related to your organization or internal projects, or anything else, clone repositories that matched to local. Then, `Sensitive filtering ruleset` to check if those repositories exist sensitive information. Finally the tool will report via Slack. You can use this tool with Cronjob to create a continuously monitoring system to track sensitive information related to your organization that leaked on Github and receive results via Slack.
 
-![GitMonitor in the action](images/action1.gif)
+<p align="center">
+    <img src="images/action1.gif"/>    
+</p>
 
-![GitMonitor in the action](images/action2.gif)
+<p align="center">
+    <img src="images/action2.gif"/>    
+</p>
 
 ## Features
 
@@ -146,4 +150,4 @@ NOTE: Be sure to merge the latest from "upstream" before making a pull request!
 
 ## Donate
 
-<style>.bmc-button img{height: 34px !important;width: 35px !important;margin-bottom: 1px !important;box-shadow: none !important;border: none !important;vertical-align: middle !important;}.bmc-button{padding: 7px 15px 7px 10px !important;line-height: 35px !important;height:51px !important;text-decoration: none !important;display:inline-flex !important;color:#ffffff !important;background-color:#FF813F !important;border-radius: 5px !important;border: 1px solid transparent !important;padding: 7px 15px 7px 10px !important;font-size: 20px !important;letter-spacing:0.6px !important;box-shadow: 0px 1px 2px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;margin: 0 auto !important;font-family:'Arial', cursive !important;-webkit-box-sizing: border-box !important;box-sizing: border-box !important;}.bmc-button:hover, .bmc-button:active, .bmc-button:focus {-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;text-decoration: none !important;box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;opacity: 0.85 !important;color:#ffffff !important;}</style><link href="https://fonts.googleapis.com/css?family=Arial" rel="stylesheet"><a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/tabcs"><img src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg" alt="Buy me a coffee"><span style="margin-left:5px;font-size:19px !important;">Buy me a coffee</span></a>
+<a href="https://www.buymeacoffee.com/tabcs" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/arial-orange.png" alt="Buy Me A Coffee" style="height: 51px !important;width: 217px !important;" ></a>
