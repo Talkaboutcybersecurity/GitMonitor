@@ -1,5 +1,6 @@
 - 1.0 -
 
+* Add a mechanism that allows using Github credentials information from environment variables
 * Change the way to send notifications to Slack
 * Add some exceptions to prevent unwanted errors
 * Edit README to describe Gitmonitor in more detail
