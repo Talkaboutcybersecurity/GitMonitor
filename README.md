@@ -5,10 +5,10 @@
     <img src="images/GitMonitor-logo.png" height="350" width="400"/>    
 </p>
 
-<center>
-  <h1 style="text-align:center;">GitMonitor</h1>
-  <h3 style="text-align:center;">One way to continuously monitor sensitive information that could be exposed on Github</h3>
-</center>
+<p>
+  <h1 align="center">GitMonitor</h1>
+  <h3 align="center">One way to continuously monitor sensitive information that could be exposed on Github</h3>
+</p>
 
 ## Summary
 
@@ -31,6 +31,8 @@ That is why I created this tool - GitMonitor. GitMonitor uses two different sets
 <p align="center">
     <img src="images/action2.gif"/>    
 </p>
+
+**Update  June 15, 2020:** We have updated to version 1.0. This version fixes some bugs so that Gitmonitor can work stably. We recommend that you perform a git pull if you are using previous versions.
 
 ## Features
 

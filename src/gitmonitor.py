@@ -1,3 +1,13 @@
+#
+# Created on JUNE 15 2020
+#
+# Project name: GitMonitor
+#
+# Version: 1.0
+#
+# Copyright (c) 2020 - TalkaboutCyberSecurity (TABCS)
+#
+
 import time
 import os
 from libs.utils import initialization, write_file, get_json, get_time
