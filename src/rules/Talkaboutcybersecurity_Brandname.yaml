@@ -1,0 +1,27 @@
+#Comment any options you don't want to use, uncomment if you want to use it. Please keep all format and spacing.
+
+# ID or rule
+id: Talkaboutcybersecurity_Brandname
+# Define the keyword
+key: Talkaboutcybersecurity
+# Programming language is included when searching
+#language:
+#  - PHP
+# File name is included when searching
+#filename:
+#  - apiController.java
+# File extension is included when searching
+#extension:
+#  - java
+#ignore:
+# Programming language is excluded when searching
+#  language:
+#    - Python
+# File extension is excluded when searching
+#  filename:
+#    - LICENSE
+#    - README
+#File extension is excluded when searching
+#  extension:
+#    - csv
+#    - txt

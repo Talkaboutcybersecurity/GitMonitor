@@ -1,0 +1,26 @@
+#Comment any options you don't want to use, uncomment if you want to use it
+
+# ID or rule
+id: Project_X_Matching
+# Define the keyword
+key: X
+# Programming language is included when searching
+language:
+  - java
+# File name is included when searching
+filename:
+  - apiController.java
+# File extension is included when searching
+extension:
+  - java
+ignore:
+# Programming language is excluded when searching
+  language:
+    - php
+# File extension is excluded when searching
+  filename:
+    - LICENSE
+#File extension is excluded when searching
+  extension:
+    - html
+    - txt
