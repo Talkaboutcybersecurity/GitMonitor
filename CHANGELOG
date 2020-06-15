@@ -1,0 +1,5 @@
+- 1.0 -
+
+* Change the way to send notifications to Slack
+* Add some exceptions to prevent unwanted errors
+* Edit README to describe Gitmonitor in more detail
